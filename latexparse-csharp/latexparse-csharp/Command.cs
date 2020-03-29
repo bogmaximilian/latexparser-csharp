@@ -9,7 +9,7 @@ namespace latexparse_csharp
     {
         public string Name { get; set; }
 
-		public List<Parameter> Parameter { get; set; } = new List<Parameter>();
+        public List<Parameter> Parameter { get; set; } = new List<Parameter>();
 
         public Command(string name)
         {
@@ -22,21 +22,23 @@ namespace latexparse_csharp
         /// </summary>
         public static Command Parse(XmlNode node)
         {
-            Command cmd = new Command(node.Attributes["Name"].Value);
+
+            Command cmd = new Command(node.Attributes["name"].Value);
+
             foreach (XmlNode subnode in node.ChildNodes)
             {
                 switch (subnode.Name)
                 {
                     case "GP":
-                        cmd.Parameter.Add(new GParameter(subnode.Attributes["Name"].Value));
+                        cmd.Parameter.Add(new GParameter(subnode.Attributes["name"].Value));
                         break;
 
                     case "OP":
-                        cmd.Parameter.Add(new OParameter(subnode.Attributes["Name"].Value));
+                        cmd.Parameter.Add(new OParameter(subnode.Attributes["name"].Value));
                         break;
-                    
+
                     case "SCP":
-                        cmd.Parameter.Add(new SCParameter(subnode.Attributes["Name"].Value, subnode.Attributes["Key"].Value[0]));
+                        cmd.Parameter.Add(new SCParameter(subnode.Attributes["name"].Value, subnode.Attributes["key"].Value[0]));
                         break;
                 }
             }
@@ -44,5 +46,5 @@ namespace latexparse_csharp
             return cmd;
         }
 
-	}
+    }
 }

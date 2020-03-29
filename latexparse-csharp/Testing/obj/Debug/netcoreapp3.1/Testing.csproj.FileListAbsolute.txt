@@ -1,0 +1,16 @@
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.exe
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.deps.json
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.runtimeconfig.json
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.runtimeconfig.dev.json
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.dll
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\Testing.pdb
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\latexparse-csharp.dll
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\bin\Debug\netcoreapp3.1\latexparse-csharp.pdb
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.csprojAssemblyReference.cache
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.csproj.CoreCompileInputs.cache
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.AssemblyInfoInputs.cache
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.AssemblyInfo.cs
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.csproj.CopyComplete
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.dll
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.pdb
+D:\Github\latexparser-csharp\latexparse-csharp\Testing\obj\Debug\netcoreapp3.1\Testing.genruntimeconfig.cache

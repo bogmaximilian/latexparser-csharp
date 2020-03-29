@@ -16,26 +16,35 @@ namespace latexparse_csharp
         {
             //Get File Data
             string filedata = File.ReadAllText(filepath, Encoding.UTF8);
-            //Get all used packages to load Commands into Dictionary
-            Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
 
             //Create Command Dictionary
             List<Command> commands = new List<Command>();
-            //Iterate through Regex Matches
-            foreach (Match match in regex.Matches(filedata))
-            {
-                //Check if Packages has implementation
-                XmlDocument doc = new XmlDocument();
-                doc.Load("CommandDictionary.xml");
 
-                for (int i = 0; i < doc.ChildNodes.Count; i++)
+            using (XmlReader reader = XmlReader.Create(new StringReader(Properties.Resources.CommandDictionary),
+                new XmlReaderSettings() { IgnoreComments = true}))
+            {
+
+                //Read XMl Command Dictionary
+                XmlDocument doc = new XmlDocument();
+                doc.Load(reader);
+
+
+                //Get all used packages to load Commands into Dictionary
+                Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
+
+                //Iterate through Regex Matches
+                foreach (Match match in regex.Matches(filedata))
                 {
-                    if (doc.ChildNodes[i].Attributes["Name"].Value == match.Groups[3].Value)
+                    for (int i = 0; i < doc.ChildNodes.Count; i++)
                     {
-                        foreach (XmlNode cmdnode in doc.ChildNodes[i])
+                        if (doc.ChildNodes[i].Name == match.Groups[3].Value || doc.ChildNodes[i].Name == "base")
                         {
-                            commands.Add(Command.Parse(cmdnode));
+                            foreach (XmlNode cmdnode in doc.ChildNodes[i])
+                            {
+                                commands.Add(Command.Parse(cmdnode));
+                            }
                         }
+
                     }
                 }
             }

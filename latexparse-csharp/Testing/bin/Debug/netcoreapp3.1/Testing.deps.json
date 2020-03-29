@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Testing/1.0.0": {
+        "dependencies": {
+          "latexparse-csharp": "1.0.1"
+        },
+        "runtime": {
+          "Testing.dll": {}
+        }
+      },
+      "latexparse-csharp/1.0.1": {
+        "runtime": {
+          "latexparse-csharp.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Testing/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "latexparse-csharp/1.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

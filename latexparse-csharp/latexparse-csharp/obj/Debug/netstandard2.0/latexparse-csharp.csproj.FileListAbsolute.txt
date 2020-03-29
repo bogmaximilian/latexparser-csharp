@@ -7,3 +7,5 @@ D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netst
 D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.AssemblyInfo.cs
 D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.dll
 D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.pdb
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse_csharp.Properties.Resources.resources
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.csproj.GenerateResource.cache

@@ -6,9 +6,9 @@ namespace latexparse_csharp
 {
     public enum Documentclasstype
     {
-        book,
-        article,
-        report
+        Book,
+        Article,
+        Report
     }
 
     public class Documentclass

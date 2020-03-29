@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Author: Maximilian Bogner
+Date:   29.03.2020
+-->
+
+<base>
+  <Command Name="title">
+    <GP Name="title"/>
+  </Command>
+  <Command Name="author">
+    <GP Name="author"/>
+  </Command>
+  <Command Name="maketitle"/>
+  <Command Name="date">
+    <GP Name="date"/>
+  </Command>
+  <!--Begin is special as it its required parameters chang based on the first parameter. Custom Implementation in code-->
+
+  <Command Name="section">
+    <GP Name="title"/>
+    <GP Name="content"/>
+    <SCP Name="numbered" Key="*"/>
+  </Command>
+  <Command Name="subsection">
+    <GP Name="title"/>
+    <GP Name="content"/>
+    <SCP Name="numbered" Key="*"/>
+  </Command>
+  <Command Name="subsubsection">
+    <GP Name="title"/>
+    <GP Name="content"/>
+    <SCP Name="numbered" Key="*"/>
+  </Command>
+  <Command Name="text">
+    <GP name="content"/>
+  </Command>
+</base>

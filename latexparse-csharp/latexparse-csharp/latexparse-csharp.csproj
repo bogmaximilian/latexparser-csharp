@@ -3,6 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>latexparse_csharp</RootNamespace>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+    <Company>MCADTeX Group</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

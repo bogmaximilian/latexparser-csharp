@@ -4,15 +4,13 @@ using System.Text;
 
 namespace latexparse_csharp
 {
-    public class LatexTree
+    public class Parameter
     {
-        public Documentclass DocInfo { get; set; }
+        public string Name { get; set; }
 
-        
-
-        public LatexTree()
+        public Parameter(string name)
         {
-                
+            this.Name = name;
         }
     }
 }

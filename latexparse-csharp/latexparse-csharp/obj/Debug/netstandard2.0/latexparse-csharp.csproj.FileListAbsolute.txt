@@ -1,0 +1,9 @@
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\bin\Debug\netstandard2.0\latexparse-csharp.deps.json
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\bin\Debug\netstandard2.0\latexparse-csharp.dll
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\bin\Debug\netstandard2.0\latexparse-csharp.pdb
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.csprojAssemblyReference.cache
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.csproj.CoreCompileInputs.cache
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.AssemblyInfoInputs.cache
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.AssemblyInfo.cs
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.dll
+D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\obj\Debug\netstandard2.0\latexparse-csharp.pdb

@@ -5,11 +5,11 @@ using System.Xml;
 
 namespace latexparse_csharp
 {
-    public class Command
+    public class Command : CommandBase
     {
         public string Name { get; set; }
 
-        public List<Parameter> Parameter { get; set; } = new List<Parameter>();
+        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 
         public Command(string name)
         {
@@ -30,15 +30,15 @@ namespace latexparse_csharp
                 switch (subnode.Name)
                 {
                     case "GP":
-                        cmd.Parameter.Add(new GParameter(subnode.Attributes["name"].Value));
+                        cmd.Parameters.Add(new GParameter(subnode.Attributes["name"].Value, Parametertypes.Required));
                         break;
 
                     case "OP":
-                        cmd.Parameter.Add(new OParameter(subnode.Attributes["name"].Value));
+                        cmd.Parameters.Add(new GParameter(subnode.Attributes["name"].Value, Parametertypes.Optional));
                         break;
 
                     case "SCP":
-                        cmd.Parameter.Add(new SCParameter(subnode.Attributes["name"].Value, subnode.Attributes["key"].Value[0]));
+                        cmd.Parameters.Add(new SCParameter(subnode.Attributes["name"].Value, subnode.Attributes["key"].Value[0]));
                         break;
                 }
             }
@@ -46,5 +46,23 @@ namespace latexparse_csharp
             return cmd;
         }
 
+
+        /// <summary>
+        /// Create a deep copy of the Class
+        /// </summary>
+        /// <returns></returns>
+        public override CommandBase Clone()
+        {
+            List<Parameter> clonedparams = new List<Parameter>();
+
+            foreach (Parameter param in this.Parameters)
+            {
+                clonedparams.Add(param.Clone());
+            }
+            return new Command(this.Name)
+            {
+                Parameters = this.Parameters
+            };
+        }
     }
 }

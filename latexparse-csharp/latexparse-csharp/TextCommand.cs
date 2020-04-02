@@ -10,7 +10,7 @@ namespace latexparse_csharp
 
         public TextCommand(string content)
         {
-            this.Content = Content;
+            this.Content = content;
         }
 
         public override CommandBase Clone()

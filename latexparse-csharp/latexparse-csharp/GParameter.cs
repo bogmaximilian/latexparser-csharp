@@ -16,9 +16,12 @@ namespace latexparse_csharp
 
         public Parametertypes Parametertype { get; set; }
 
-        public GParameter(string name, Parametertypes paramtype) : base(name)
+        public bool CanHaveBody { get; set; }
+
+        public GParameter(string name, Parametertypes paramtype, bool body) : base(name)
         {
             this.Parametertype = paramtype;
+            this.CanHaveBody = body;
         }
 
         public override Parameter Clone()
@@ -29,7 +32,7 @@ namespace latexparse_csharp
                 cmds.Add(cmd.Clone());
             }
 
-            return new GParameter(this.Name, this.Parametertype)
+            return new GParameter(this.Name, this.Parametertype, this.CanHaveBody)
             {
                 SubCommands = cmds,
                 ValueRecorded = this.ValueRecorded

@@ -8,7 +8,7 @@ namespace Testing
     {
         static void Main(string[] args)
         {
-            List<Command> cmds = LatexParser.ParseFile(@"D:\temp\test\test.tex");
+            List<CommandBase> cmds = LatexParser.ParseFile(@"D:\temp\test\test.tex");
             Console.ReadKey();
         }
     }

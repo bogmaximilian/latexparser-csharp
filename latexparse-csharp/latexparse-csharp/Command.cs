@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -27,20 +28,32 @@ namespace latexparse_csharp
 
             foreach (XmlNode subnode in node.ChildNodes)
             {
+
                 switch (subnode.Name)
                 {
                     case "GP":
-                        cmd.Parameters.Add(new GParameter(subnode.Attributes["name"].Value, Parametertypes.Required));
+                        if (subnode.Attributes["body"] != null)
+                        {
+                            cmd.Parameters.Add(new GParameter(
+                                subnode.Attributes["name"].Value,
+                                Parametertypes.Required,
+                                bool.Parse(subnode.Attributes["body"].Value)));
+                        }
                         break;
 
                     case "OP":
-                        cmd.Parameters.Add(new GParameter(subnode.Attributes["name"].Value, Parametertypes.Optional));
+                        cmd.Parameters.Add(new GParameter(
+                            subnode.Attributes["name"].Value,
+                            Parametertypes.Optional,
+                            false));
                         break;
 
                     case "SCP":
-                        cmd.Parameters.Add(new SCParameter(subnode.Attributes["name"].Value, subnode.Attributes["key"].Value[0]));
+                        cmd.Parameters.Add(new SCParameter(subnode.Attributes["name"].Value,
+                            subnode.Attributes["key"].Value[0]));
                         break;
                 }
+
             }
 
             return cmd;

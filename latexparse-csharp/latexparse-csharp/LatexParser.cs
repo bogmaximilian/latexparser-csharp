@@ -26,10 +26,10 @@ namespace latexparse_csharp
 
         private static List<Command> Commands { get; set; }
 
-        public static List<Command> ParseFile(string filepath)
+        public static List<CommandBase> ParseFile(string filepath)
         {
             //Get File Data
-            FileData = File.ReadAllText(filepath, Encoding.UTF8);
+            FileData = File.ReadAllText(filepath, Encoding.UTF8).Replace("\r", "").Replace("\n", "");
 
             //Create Command Dictionary
             Commands = new List<Command>();
@@ -63,8 +63,10 @@ namespace latexparse_csharp
                     }
                 }
             }
-
-            return Commands;
+            GParameter param = new GParameter("test", Parametertypes.Required, false);
+            int counter = 0;
+            GetSubCommands(ref param, ref counter);
+            return param.SubCommands;
         }
 
         private static void GetSubCommands(ref GParameter parentparam, ref int counter)
@@ -74,23 +76,24 @@ namespace latexparse_csharp
             switch (parentparam.Parametertype)
             {
                 case Parametertypes.Required:
-                    endingchar = '}';
+                    endingchar = (parentparam.CanHaveBody) ? '\\' : '}';
                     break;
 
                 default:
                     endingchar = ']';
                     break;
             }
-            
+
             //Set Search Mode
             SearchMode mode = SearchMode.BeginCommand;
 
             //Setup Variables for recording commands
             int startindex = counter;
             Command currcmd = null;
-            
+
             for (int i = counter; i < FileData.Length; i++)
             {
+
                 if (FileData[i] == endingchar)
                 {
                     if (mode == SearchMode.Text)
@@ -109,7 +112,7 @@ namespace latexparse_csharp
                         }
                     }
 
-                    i++;
+                    counter = i;
                     return;
                 }
                 else if (mode == SearchMode.BeginCommand)
@@ -131,6 +134,7 @@ namespace latexparse_csharp
                     if (!Char.IsLetter(FileData[i]))
                     {
                         //Get Command Signature
+                        startindex++;
                         string cmdname = new string(new ArraySegment<char>(FileData.ToCharArray(),
                             startindex, i - startindex).ToArray());
 
@@ -158,22 +162,55 @@ namespace latexparse_csharp
                                 .First(x => x.Parametertype == Parametertypes.Required && !x.ValueRecorded);
                             i++;
                             GetSubCommands(ref currparam, ref i);
+                            currparam.ValueRecorded = true;
                             break;
                         case '[':
                             GParameter curroparam = currcmd.Parameters.OfType<GParameter>()
                                 .FirstOrDefault(x => x.Parametertype == Parametertypes.Optional && !x.ValueRecorded);
                             i++;
                             GetSubCommands(ref curroparam, ref i);
+                            curroparam.ValueRecorded = true;
                             break;
                         default:
-                            SCParameter param = currcmd.Parameters.OfType<SCParameter>().First(x => !x.ValueRecorded);
-                            if (param != null && FileData[i] == param.Key)
+                            try
                             {
-                                param.ValueRecorded = true;
-                                param.Enabled = true;
+                                SCParameter param = currcmd.Parameters.OfType<SCParameter>()
+                                    .First(x => !x.ValueRecorded);
+                                if (param != null && FileData[i] == param.Key)
+                                {
+                                    param.ValueRecorded = true;
+                                    param.Enabled = true;
+                                }
+                            }
+                            catch (NullReferenceException exc)
+                            {
+                                if (currcmd.Parameters.Exists(x => !x.ValueRecorded &&
+                                                                   ((GParameter)x).Parametertype == Parametertypes.Required))
+                                {
+                                    GParameter param = (GParameter)currcmd.Parameters.First(x =>
+                                        !x.ValueRecorded &&
+                                        ((GParameter)x).Parametertype == Parametertypes.Required);
+                                    if (FileData[i] != ' ')
+                                    {
+
+                                        if (param.CanHaveBody)
+                                        {
+                                            GetSubCommands(ref param, ref i);
+                                            param.ValueRecorded = true;
+                                        }
+                                        else
+                                            param.SubCommands.Add(new TextCommand(FileData[i].ToString()));
+                                    }
+                                }
                             }
                             break;
                     }
+
+                    if (currcmd.Parameters.All(x => x.ValueRecorded))
+                    {
+                        mode = SearchMode.BeginCommand;
+                    }
+
                 }
                 else if (mode == SearchMode.Text)
                 {

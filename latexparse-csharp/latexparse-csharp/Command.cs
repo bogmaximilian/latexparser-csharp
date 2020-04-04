@@ -24,12 +24,13 @@ namespace latexparse_csharp
         /// </summary>
         public static Command Parse(XmlNode node)
         {
-
+            //Get cmd name from xml Node
             Command cmd = new Command(node.Attributes["name"].Value);
+            
 
+            //Get subnode Name and depending on it setup Command Parameters 
             foreach (XmlNode subnode in node.ChildNodes)
             {
-
                 switch (subnode.Name)
                 {
                     case "GP":
@@ -66,25 +67,11 @@ namespace latexparse_csharp
             return cmd;
         }
 
-
         /// <summary>
-        /// Create a deep copy of the Class
+        /// Converts the Command into a string with values of submembers
+        /// This Function is ugly for cleaner output use ToString(int depth)
         /// </summary>
         /// <returns></returns>
-        public override CommandBase Clone()
-        {
-            List<Parameter> clonedparams = new List<Parameter>();
-
-            foreach (Parameter param in this.Parameters)
-            {
-                clonedparams.Add(param.Clone());
-            }
-            return new Command(this.Name)
-            {
-                Parameters = this.Parameters
-            };
-        }
-
         public override string ToString()
         {
             string paramstr = "";
@@ -97,23 +84,25 @@ namespace latexparse_csharp
                    $"{paramstr}\n";
         }
 
+        /// <summary>
+        /// Convert the Command into a tree-like structured string
+        /// </summary>
+        /// <param name="depth">Specifies at which level of depth in the Class Structure the element is</param>
+        /// <returns></returns>
         public override string ToString(int depth)
         {
-
             string indent = "";
             for (int i = 0; i  < depth; i++)
             {
                 indent += "-";
             }
             
-
             string paramstr = "";
             foreach (Parameter param in Parameters)
             {
                 paramstr += param.ToString(depth + 1);
             }
 
-            
             return $"{indent}Cmd: {this.Name} \n" +
                    $"{paramstr}\n";
         }

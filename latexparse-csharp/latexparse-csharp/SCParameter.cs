@@ -16,14 +16,6 @@ namespace latexparse_csharp
             this.Key = key;
         }
 
-        public override Parameter Clone()
-        {
-            return new SCParameter(this.Name, this.Key)
-            {
-                ValueRecorded = this.ValueRecorded
-            };
-        }
-
         public override string ToString()
         {
             return this.ToString(0);

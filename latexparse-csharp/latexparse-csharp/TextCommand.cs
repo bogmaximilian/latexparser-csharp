@@ -14,11 +14,6 @@ namespace latexparse_csharp
             this.Content = content;
         }
 
-        public override CommandBase Clone()
-        {
-            return new TextCommand(this.Content);
-        }
-
         public override string ToString()
         {
             return $"TxtCmd: {this.Content}";

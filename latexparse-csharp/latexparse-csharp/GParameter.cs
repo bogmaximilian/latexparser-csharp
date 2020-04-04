@@ -25,21 +25,7 @@ namespace latexparse_csharp
             this.CanHaveBody = body;
         }
 
-        public override Parameter Clone()
-        {
-            List<CommandBase> cmds = new List<CommandBase>();
-            foreach (CommandBase cmd in SubCommands)
-            {
-                cmds.Add(cmd.Clone());
-            }
-
-            return new GParameter(this.Name, this.Parametertype, this.CanHaveBody)
-            {
-                SubCommands = cmds,
-                ValueRecorded = this.ValueRecorded
-            };
-        }
-
+        
         public override string ToString()
         {
             return this.ToString(0);

@@ -16,13 +16,6 @@ namespace latexparse_csharp
             this.Name = name;
         }
 
-        public virtual Parameter Clone()
-        {
-            return new Parameter(this.Name)
-            {
-                ValueRecorded = this.ValueRecorded
-            };
-        }
 
         public virtual string ToString(int depth)
         {

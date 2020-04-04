@@ -8,8 +8,6 @@ namespace latexparse_csharp
     {
         public Documentclass DocInfo { get; set; }
 
-        
-
         public LatexTree()
         {
                 

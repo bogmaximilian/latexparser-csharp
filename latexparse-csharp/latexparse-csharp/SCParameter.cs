@@ -4,6 +4,7 @@ using System.Text;
 
 namespace latexparse_csharp
 {
+    [Serializable]
     public class SCParameter : Parameter
     {
         public char Key { get; set; }
@@ -33,7 +34,7 @@ namespace latexparse_csharp
             string indent = string.Empty;
             for (int i = 0; i < depth; i++)
             {
-                indent += "\t";
+                indent += "-";
             }
 
             return $"{indent}SCP: {this.Name}\t{Enabled}";

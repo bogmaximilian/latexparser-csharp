@@ -10,6 +10,7 @@ namespace latexparse_csharp
         Optional
     }
 
+    [Serializable]
     public class GParameter : Parameter
     {
         public List<CommandBase> SubCommands { get; set; } = new List<CommandBase>();
@@ -49,13 +50,13 @@ namespace latexparse_csharp
             string cmdstr = string.Empty;
             foreach (CommandBase cmd in this.SubCommands)
             {
-                cmdstr += cmd.ToString();
+                cmdstr += cmd.ToString(depth + 1);
             }
 
             string indent = string.Empty;
             for (int i = 0; i < depth; i++)
             {
-                indent += "\t";
+                indent += "-";
             }
 
             string paramtype = (Parametertype == Parametertypes.Required) ? "GP" : "OP";

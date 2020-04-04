@@ -11,6 +11,7 @@ namespace latexparse_csharp
         Report
     }
 
+    [Serializable]
     public class Documentclass
     {
         public Documentclasstype Documentclasstype { get; set; }

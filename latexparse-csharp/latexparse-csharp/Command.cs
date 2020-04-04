@@ -6,6 +6,7 @@ using System.Xml;
 
 namespace latexparse_csharp
 {
+    [Serializable]
     public class Command : CommandBase
     {
         public string Name { get; set; }
@@ -102,7 +103,7 @@ namespace latexparse_csharp
             string indent = "";
             for (int i = 0; i  < depth; i++)
             {
-                indent += "\t";
+                indent += "-";
             }
             
 

@@ -7,6 +7,7 @@ using System.Xml;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Binary;
 
 
 namespace latexparse_csharp
@@ -19,6 +20,19 @@ namespace latexparse_csharp
         Text
     }
 
+    internal static class ExtensionMethods
+    {
+        public static T DeepClone<T>(this T a)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, a);
+                stream.Position = 0;
+                return (T) formatter.Deserialize(stream);
+            }
+        }
+    }
 
     public class LatexParser
     {
@@ -104,18 +118,11 @@ namespace latexparse_csharp
                         //Add Command and adjust counter + mode accordingly
                         ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
                     }
-                    else
-                    {
-                        if (currcmd != null)
-                        {
-                            parentparam.SubCommands.Add(currcmd);
-                        }
-                    }
 
                     counter = i;
                     return;
                 }
-                else if (mode == SearchMode.BeginCommand)
+                else if (mode == SearchMode.BeginCommand || FileData[i] == '\\')
                 {
                     if (FileData[i] == '\\')
                     {
@@ -145,12 +152,11 @@ namespace latexparse_csharp
                             //Update Mode
                             mode = SearchMode.Parameters;
 
-                            //Add Command to Parentparam (can either be acutal parameter or constructed in ParseFile)
-                            parentparam.SubCommands.Add(res);
-
                             //Set Current Command as Copy of recognized Command
-                            currcmd = (Command)res.Clone();
+                            currcmd = res.DeepClone();
 
+                            //Add Command to Parentparam (can either be acutal parameter or constructed in ParseFile)
+                            parentparam.SubCommands.Add(currcmd);
 
                             //Tune back counter to enable parameter detection
                             i--;
@@ -176,35 +182,27 @@ namespace latexparse_csharp
                             curroparam.ValueRecorded = true;
                             break;
                         default:
-                            try
+                            if (currcmd.Parameters.OfType<SCParameter>().Any(x => !x.ValueRecorded && x.Key == FileData[i]))
                             {
-                                SCParameter param = currcmd.Parameters.OfType<SCParameter>()
-                                    .First(x => !x.ValueRecorded);
-                                if (param != null && FileData[i] == param.Key)
-                                {
-                                    param.ValueRecorded = true;
-                                    param.Enabled = true;
-                                }
+                                SCParameter param = currcmd.Parameters.OfType<SCParameter>().First(x => !x.ValueRecorded);
+                                param.ValueRecorded = true;
+                                param.Enabled = true;
                             }
-                            catch (NullReferenceException exc)
+                            else if (currcmd.Parameters.OfType<GParameter>().Any(x => !x.ValueRecorded && ((GParameter)x).Parametertype == Parametertypes.Required))
                             {
-                                if (currcmd.Parameters.Exists(x => !x.ValueRecorded &&
-                                                                   ((GParameter)x).Parametertype == Parametertypes.Required))
+                                GParameter param = (GParameter)currcmd.Parameters.First(x =>
+                                    !x.ValueRecorded &&
+                                    ((GParameter)x).Parametertype == Parametertypes.Required);
+                                if (FileData[i] != ' ')
                                 {
-                                    GParameter param = (GParameter)currcmd.Parameters.First(x =>
-                                        !x.ValueRecorded &&
-                                        ((GParameter)x).Parametertype == Parametertypes.Required);
-                                    if (FileData[i] != ' ')
+                                    if (param.CanHaveBody)
                                     {
-
-                                        if (param.CanHaveBody)
-                                        {
-                                            GetSubCommands(ref param, ref i);
-                                            param.ValueRecorded = true;
-                                        }
-                                        else
-                                            param.SubCommands.Add(new TextCommand(FileData[i].ToString()));
+                                        GetSubCommands(ref param, ref i);
+                                        param.ValueRecorded = true;
+                                        i--;
                                     }
+                                    else
+                                        param.SubCommands.Add(new TextCommand(FileData[i].ToString()));
                                 }
                             }
                             break;
@@ -232,6 +230,18 @@ namespace latexparse_csharp
                 }
 
             }
+
+            if (mode == SearchMode.Text)
+            {
+                //Get string content and load it into a textcomment
+                string txtcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),
+                    startindex, FileData.Length - startindex).ToArray());
+
+                //Add TextCommand to parentparam
+                ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
+            }
+
+            counter = FileData.Length - 1;
         }
     }
 }

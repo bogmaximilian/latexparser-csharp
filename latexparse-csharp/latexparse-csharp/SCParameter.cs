@@ -22,5 +22,21 @@ namespace latexparse_csharp
                 ValueRecorded = this.ValueRecorded
             };
         }
+
+        public override string ToString()
+        {
+            return this.ToString(0);
+        }
+
+        public override string ToString(int depth)
+        {
+            string indent = string.Empty;
+            for (int i = 0; i < depth; i++)
+            {
+                indent += "\t";
+            }
+
+            return $"{indent}SCP: {this.Name}\t{Enabled}";
+        }
     }
 }

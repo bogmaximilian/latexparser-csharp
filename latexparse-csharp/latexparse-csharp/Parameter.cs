@@ -22,5 +22,10 @@ namespace latexparse_csharp
                 ValueRecorded = this.ValueRecorded
             };
         }
+
+        public virtual string ToString(int depth)
+        {
+            return this.ToString();
+        }
     }
 }

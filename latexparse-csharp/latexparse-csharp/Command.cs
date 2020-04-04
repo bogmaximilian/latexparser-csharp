@@ -39,6 +39,12 @@ namespace latexparse_csharp
                                 Parametertypes.Required,
                                 bool.Parse(subnode.Attributes["body"].Value)));
                         }
+                        else
+                        {
+                            cmd.Parameters.Add(new GParameter(
+                                subnode.Attributes["name"].Value, 
+                                Parametertypes.Required, false));
+                        }
                         break;
 
                     case "OP":
@@ -76,6 +82,39 @@ namespace latexparse_csharp
             {
                 Parameters = this.Parameters
             };
+        }
+
+        public override string ToString()
+        {
+            string paramstr = "";
+            foreach (Parameter param in Parameters)
+            {
+                paramstr += param.ToString();
+            }
+
+            return $"Cmd: {this.Name} \n" +
+                   $"{paramstr}\n";
+        }
+
+        public override string ToString(int depth)
+        {
+
+            string indent = "";
+            for (int i = 0; i  < depth; i++)
+            {
+                indent += "\t";
+            }
+            
+
+            string paramstr = "";
+            foreach (Parameter param in Parameters)
+            {
+                paramstr += param.ToString(depth + 1);
+            }
+
+            
+            return $"{indent}Cmd: {this.Name} \n" +
+                   $"{paramstr}\n";
         }
     }
 }

@@ -145,8 +145,12 @@ namespace latexparse_csharp
                             //Update Mode
                             mode = SearchMode.Parameters;
 
+                            //Add Command to Parentparam (can either be acutal parameter or constructed in ParseFile)
+                            parentparam.SubCommands.Add(res);
+
                             //Set Current Command as Copy of recognized Command
                             currcmd = (Command)res.Clone();
+
 
                             //Tune back counter to enable parameter detection
                             i--;

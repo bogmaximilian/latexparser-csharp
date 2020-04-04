@@ -38,5 +38,30 @@ namespace latexparse_csharp
                 ValueRecorded = this.ValueRecorded
             };
         }
+
+        public override string ToString()
+        {
+            return this.ToString(0);
+        }
+
+        public override string ToString(int depth)
+        {
+            string cmdstr = string.Empty;
+            foreach (CommandBase cmd in this.SubCommands)
+            {
+                cmdstr += cmd.ToString();
+            }
+
+            string indent = string.Empty;
+            for (int i = 0; i < depth; i++)
+            {
+                indent += "\t";
+            }
+
+            string paramtype = (Parametertype == Parametertypes.Required) ? "GP" : "OP";
+            return $"{indent}{paramtype}: {this.Name} \n" +
+                   $"{cmdstr}\n";
+            
+        }
     }
 }

@@ -17,5 +17,21 @@ namespace latexparse_csharp
         {
             return new TextCommand(this.Content);
         }
+
+        public override string ToString()
+        {
+            return $"TxtCmd: {this.Content}";
+        }
+
+        public override string ToString(int depth)
+        {
+            string indent = string.Empty;
+            for (int i = 0; i < depth; i++)
+            {
+                indent += "\t";
+            }
+
+            return $"{indent}TxtCmd: {this.Content}";
+        }
     }
 }

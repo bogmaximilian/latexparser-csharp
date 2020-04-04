@@ -10,5 +10,10 @@ namespace latexparse_csharp
         {
             return new CommandBase();
         }
+
+        public virtual string ToString(int depth)
+        {
+            return this.ToString();
+        }
     }
 }

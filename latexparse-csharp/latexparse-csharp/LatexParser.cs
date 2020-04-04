@@ -20,8 +20,17 @@ namespace latexparse_csharp
         Text
     }
 
+    /// <summary>
+    /// Internal ExtensionsMethods to handle DeepCloning, etc...
+    /// </summary>
     internal static class ExtensionMethods
     {
+        /// <summary>
+        /// Perform a Deep Clone of an object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <returns></returns>
         public static T DeepClone<T>(this T a)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -40,6 +49,11 @@ namespace latexparse_csharp
 
         private static List<Command> Commands { get; set; }
 
+        /// <summary>
+        /// Parse Latex File to C# Class Structure. For further Information see the Docs.
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <returns></returns>
         public static List<CommandBase> ParseFile(string filepath)
         {
             //Get File Data
@@ -77,6 +91,8 @@ namespace latexparse_csharp
                     }
                 }
             }
+
+            //Setup normal parameters to get the Subcommands
             GParameter param = new GParameter("test", Parametertypes.Required, false);
             int counter = 0;
             GetSubCommands(ref param, ref counter);
@@ -165,9 +181,11 @@ namespace latexparse_csharp
                 }
                 else if (mode == SearchMode.Parameters)
                 {
+                    //Switch current Character to get SubCommands of Current Parameter
                     switch (FileData[i])
                     {
                         case '{':
+                            //Get the according Parameter 
                             GParameter currparam = currcmd.Parameters.OfType<GParameter>()
                                 .First(x => x.Parametertype == Parametertypes.Required && !x.ValueRecorded);
                             i++;

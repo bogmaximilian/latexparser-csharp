@@ -93,7 +93,7 @@ namespace latexparse_csharp
             }
 
             //Setup normal parameters to get the Subcommands
-            GParameter param = new GParameter("test", Parametertypes.Required);
+            GParameter param = new GParameter("test", Parametertypes.Required, true, new List<string>());
             int counter = 0;
             GetSubCommands(ref param, ref counter);
             return param.SubCommands;

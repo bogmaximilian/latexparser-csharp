@@ -102,6 +102,7 @@ namespace latexparse_csharp
         private static void GetSubCommands(ref GParameter parentparam, ref int counter)
         {
             char endingchar;
+
             //Get Character that can end this Parameter
             switch (parentparam.Parametertype)
             {

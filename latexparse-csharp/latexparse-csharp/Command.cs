@@ -40,8 +40,10 @@ namespace latexparse_csharp
                             List<string> CmdEnds = new List<string>();
                             foreach (XmlNode subsubnode in subnode.ChildNodes)
                             {
-                                CmdEnds.Add(subnode.Attributes["cmdcall"].Value);
+                                CmdEnds.Add(subsubnode.Attributes["cmdcall"].Value);
                             }
+
+                            //Create GroupParameter with new Attributes for Body
                             cmd.Parameters.Add(new GParameter(
                                 subnode.Attributes["name"].Value,
                                 Parametertypes.Required,
@@ -109,7 +111,7 @@ namespace latexparse_csharp
                 paramstr += param.ToString(depth + 1);
             }
 
-            return $"{indent}Cmd: {this.Name} \n" +
+            return $"\n{indent}Cmd: {this.Name} \n" +
                    $"{paramstr}\n";
         }
     }

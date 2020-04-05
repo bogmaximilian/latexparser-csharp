@@ -38,7 +38,7 @@ namespace latexparse_csharp
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, a);
                 stream.Position = 0;
-                return (T) formatter.Deserialize(stream);
+                return (T)formatter.Deserialize(stream);
             }
         }
     }
@@ -93,7 +93,7 @@ namespace latexparse_csharp
             }
 
             //Setup normal parameters to get the Subcommands
-            GParameter param = new GParameter("test", Parametertypes.Required, false);
+            GParameter param = new GParameter("test", Parametertypes.Required);
             int counter = 0;
             GetSubCommands(ref param, ref counter);
             return param.SubCommands;
@@ -135,8 +135,16 @@ namespace latexparse_csharp
                         ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
                     }
 
-                    counter = i;
-                    return;
+                    if (!parentparam.CanHaveBody)
+                    {
+                        counter = i;
+                        return;
+                    }
+                    else
+                    {
+                        startindex = i;
+                        mode = SearchMode.CommandSequence;
+                    }
                 }
                 else if (mode == SearchMode.BeginCommand || FileData[i] == '\\')
                 {
@@ -157,9 +165,15 @@ namespace latexparse_csharp
                     if (!Char.IsLetter(FileData[i]))
                     {
                         //Get Command Signature
-                        startindex++;
                         string cmdname = new string(new ArraySegment<char>(FileData.ToCharArray(),
-                            startindex, i - startindex).ToArray());
+                            startindex + 1, i - (startindex + 1)).ToArray());
+
+                        //Check if Command is accepted as an end to the active body parameter + if the parentparam is a body parameter
+                        if (parentparam.CanHaveBody && parentparam.EndBodyList.Contains(cmdname))
+                        {
+                            counter = startindex;
+                            return;
+                        }
 
                         Command res = Commands.First(x => x.Name == cmdname);
                         //Verify if Command is loaded

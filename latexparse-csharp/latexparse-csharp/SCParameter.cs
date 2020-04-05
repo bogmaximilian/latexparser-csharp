@@ -43,7 +43,7 @@ namespace latexparse_csharp
                 indent += "-";
             }
 
-            return $"{indent}SCP: {this.Name}\t{Enabled}";
+            return $"{indent}SCP: {this.Name} - {Enabled}";
         }
     }
 }

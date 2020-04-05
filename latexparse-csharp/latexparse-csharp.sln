@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "latexparse-csharp", "latexparse-csharp\latexparse-csharp.csproj", "{0ED4766C-4EBC-4FF7-AA5C-BF3A9B7AC031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{FBFC2B39-ABF7-4604-B2E9-83BF94B00AE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing", "Testing\Testing.csproj", "{FBFC2B39-ABF7-4604-B2E9-83BF94B00AE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

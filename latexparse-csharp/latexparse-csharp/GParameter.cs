@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace latexparse_csharp
@@ -31,13 +32,24 @@ namespace latexparse_csharp
         /// </summary>
         public bool CanHaveBody { get; set; }
 
-        public GParameter(string name, Parametertypes paramtype, bool body) : base(name)
+        /// <summary>
+        /// Sets the List of Command that can close the body
+        /// </summary>
+        public List<string> EndBodyList { get; set; }
+
+        public GParameter(string name, Parametertypes paramtype, bool body, List<string> bodyend) : base(name)
         {
             this.Parametertype = paramtype;
             this.CanHaveBody = body;
+            this.EndBodyList = bodyend;
         }
 
-        
+        public GParameter(string name, Parametertypes paramtype) : this(name, paramtype, false, new List<string>())
+        {
+
+        }
+
+
         public override string ToString()
         {
             return this.ToString(0);

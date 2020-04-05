@@ -26,7 +26,7 @@ namespace latexparse_csharp
         {
             //Get cmd name from xml Node
             Command cmd = new Command(node.Attributes["name"].Value);
-            
+
 
             //Get subnode Name and depending on it setup Command Parameters 
             foreach (XmlNode subnode in node.ChildNodes)
@@ -36,24 +36,30 @@ namespace latexparse_csharp
                     case "GP":
                         if (subnode.Attributes["body"] != null)
                         {
+                            //Get the Names of the EndCmds
+                            List<string> CmdEnds = new List<string>();
+                            foreach (XmlNode subsubnode in subnode.ChildNodes)
+                            {
+                                CmdEnds.Add(subnode.Attributes["cmdcall"].Value);
+                            }
                             cmd.Parameters.Add(new GParameter(
                                 subnode.Attributes["name"].Value,
                                 Parametertypes.Required,
-                                bool.Parse(subnode.Attributes["body"].Value)));
+                                bool.Parse(subnode.Attributes["body"].Value),
+                                    CmdEnds));
                         }
                         else
                         {
                             cmd.Parameters.Add(new GParameter(
-                                subnode.Attributes["name"].Value, 
-                                Parametertypes.Required, false));
+                                subnode.Attributes["name"].Value,
+                                Parametertypes.Required));
                         }
                         break;
 
                     case "OP":
                         cmd.Parameters.Add(new GParameter(
                             subnode.Attributes["name"].Value,
-                            Parametertypes.Optional,
-                            false));
+                            Parametertypes.Optional));
                         break;
 
                     case "SCP":
@@ -92,11 +98,11 @@ namespace latexparse_csharp
         public override string ToString(int depth)
         {
             string indent = "";
-            for (int i = 0; i  < depth; i++)
+            for (int i = 0; i < depth; i++)
             {
                 indent += "-";
             }
-            
+
             string paramstr = "";
             foreach (Parameter param in Parameters)
             {

@@ -17,7 +17,9 @@ CommandDictionary.xml Syntax:
 ```xml
 <package>
     <Command name="commandname">
-        <GP name="RequiredGroupParameter" body="False"/>
+        <GP name="RequiredGroupParameter" body="False">
+            <CmdEnd cmdcall="EndCommand">
+        </GP>
         <OP name="OptionalGroupParameter"/>
         <SCP name="SingleCharacterParameter" Key="*"/>
     </Command>
@@ -27,5 +29,6 @@ CommandDictionary.xml Syntax:
 - Command -> name specifies the name of the Command. Commands can have various types of parameters
     * Parameter types:
         * GP: Parameter is required and normally represented within these parentheses {}. Body Setting enables this Command to be a parent e.g.: Section, begin, etc...
+            - CmdEnd specifies the Command that will close this body command
         * OP: Parameter is optional and normally represented within these parentheses []. These Parameters cannot be placed after the required parameters
         * SCP: Parameter is optional. If the  Key is embedded in the Commandcall it will be counted as enabled

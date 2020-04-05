@@ -19,21 +19,30 @@ Date:   29.03.2020
   <Command name="date">
     <GP name="date"/>
   </Command>
-  <!--Begin is special as it its required parameters chang based on the first parameter. Custom Implementation in code-->
+  <!--UNDONE: Begin is special as it its required parameters change based on the first parameter. Custom Implementation in code-->
 
   <Command name="section">
     <GP name="title"/>
-    <GP name="content" body="True"/>
+    <GP name="content" body="True">
+      <CmdEnd cmdcall="section"/>
+    </GP>
     <SCP name="numbered" key="*"/>
   </Command>
   <Command name="subsection">
     <GP name="title"/>
-    <GP name="content" body="True"/>
+    <GP name="content" body="True">
+      <CmdEnd cmdcall="section"/>
+      <CmdEnd cmdcall="subsection"/>
+    </GP>
     <SCP name="numbered" key="*"/>
   </Command>
   <Command name="subsubsection">
     <GP name="title"/>
-    <GP name="content" body="True"/>
+    <GP name="content" body="True">
+      <CmdEnd cmdcall="section"/>
+      <CmdEnd cmdcall="subsection"/>
+      <CmdEnd cmdcall="subsubsection"/>
+    </GP>
     <SCP name="numbered" key="*"/>
   </Command>
 </base>

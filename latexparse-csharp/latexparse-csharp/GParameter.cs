@@ -14,6 +14,7 @@ namespace latexparse_csharp
         Optional
     }
 
+
     /// <summary>
     /// GroupParameter recognized as either {} or []
     /// </summary>
@@ -31,6 +32,12 @@ namespace latexparse_csharp
         /// Specifies if the Command is a ParentCommand like section, begin, etc...
         /// </summary>
         public bool CanHaveBody { get; set; }
+
+        public bool BeginCmdParam { get; set; } = false;
+
+        public bool IsBeginCmdBody { get; set; } = false;
+
+        public Command Parent { get; set; }
 
         /// <summary>
         /// Sets the List of Command that can close the body

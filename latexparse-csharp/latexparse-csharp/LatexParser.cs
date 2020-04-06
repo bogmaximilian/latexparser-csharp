@@ -170,13 +170,39 @@ namespace latexparse_csharp
                             startindex + 1, i - (startindex + 1)).ToArray());
 
                         //Check if Command is accepted as an end to the active body parameter + if the parentparam is a body parameter
-                        if (parentparam.CanHaveBody && parentparam.EndBodyList.Contains(cmdname))
+                        if (parentparam.CanHaveBody && parentparam.EndBodyList.Contains(cmdname) && !parentparam.IsBeginCmdBody)
                         {
                             counter = startindex;
                             return;
                         }
 
-                        Command res = Commands.First(x => x.Name == cmdname);
+
+                        Command res = null;
+                        if (Commands.Exists(x => x.Name == cmdname))
+                        {
+                            res = Commands.First(x => x.Name == cmdname);
+                        }
+                        else if (cmdname == "begin")
+                        {
+                            res = new BeginCmd();
+                        }
+                        else if (cmdname == "end" && parentparam.IsBeginCmdBody)
+                        {
+                            //mode = SearchMode.Parameters;
+                            //currcmd = Commands.First(x => x.Name == "end").DeepClone();
+                            //i--;
+
+                            int expectedlength = 2 + ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
+                            string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),
+                                i, expectedlength).ToArray()).Replace("}", "").Replace("{","");
+                            if (checkstring == ((TextCommand) ((GParameter) parentparam.Parent.Parameters[0]).SubCommands[0])
+                                .Content)
+                            {
+                                counter = i + expectedlength;
+                                return;
+                            }
+                        }
+
                         //Verify if Command is loaded
                         if (res != null)
                         {
@@ -186,7 +212,7 @@ namespace latexparse_csharp
                             //Set Current Command as Copy of recognized Command
                             currcmd = res.DeepClone();
 
-                            //Add Command to Parentparam (can either be acutal parameter or constructed in ParseFile)
+                            //Add Command to Parentparam (can either be actual parameter or constructed in ParseFile)
                             parentparam.SubCommands.Add(currcmd);
 
                             //Tune back counter to enable parameter detection
@@ -206,6 +232,15 @@ namespace latexparse_csharp
                             i++;
                             GetSubCommands(ref currparam, ref i);
                             currparam.ValueRecorded = true;
+                            if (currparam.BeginCmdParam)
+                            {
+                                string cmd = ((TextCommand)currparam.SubCommands[0]).Content;
+                                if (Commands.Exists(x => x.Name == cmd))
+                                {
+                                    Command res = Commands.First(x => x.Name == cmd).DeepClone();
+                                    ((BeginCmd)currcmd).LoadParams(res.DeepClone());
+                                }
+                            }
                             break;
                         case '[':
                             GParameter curroparam = currcmd.Parameters.OfType<GParameter>()

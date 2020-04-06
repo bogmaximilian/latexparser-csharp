@@ -14,11 +14,12 @@ namespace Testing
             watch.Start();
             List<CommandBase> cmds = LatexParser.ParseFile(@"D:\temp\test\test.tex");
             watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
             foreach (CommandBase cmd in cmds)
             {
                 Console.Write(cmd.ToString(0));
             }
+
+            Console.WriteLine(watch.ElapsedMilliseconds);
         }
     }
 }

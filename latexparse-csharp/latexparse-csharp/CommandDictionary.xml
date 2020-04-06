@@ -19,8 +19,8 @@ Date:   29.03.2020
   <Command name="date">
     <GP name="date"/>
   </Command>
-  <!--UNDONE: Begin is special as it its required parameters change based on the first parameter. Custom Implementation in code-->
-
+  <!-- Begin is special as it its required parameters change based on the first parameter. Custom Implementation in code-->
+  
   <Command name="section">
     <GP name="title"/>
     <GP name="content" body="True">

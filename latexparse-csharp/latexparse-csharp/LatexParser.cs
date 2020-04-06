@@ -276,10 +276,10 @@ namespace latexparse_csharp
                             break;
                     }
 
-                    if (currcmd.Parameters.All(x => x.ValueRecorded))
-                    {
-                        mode = SearchMode.BeginCommand;
-                    }
+                    //if (currcmd.Parameters.All(x => x.ValueRecorded))
+                    //{
+                    //    mode = SearchMode.BeginCommand;
+                    //}
 
                 }
                 else if (mode == SearchMode.Text)

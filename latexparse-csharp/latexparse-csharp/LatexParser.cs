@@ -354,7 +354,7 @@ namespace latexparse_csharp
                 ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
             }
 
-            counter = FileData.Length - 1;
+            counter = FileData.Length;
         }
     }
 }

@@ -147,7 +147,7 @@ namespace latexparse_csharp
                 //        }
                 //    }
                 //}
-                if (FileData[i] == endingchar && mode != SearchMode.Parameters)
+                if (FileData[i] == endingchar && mode != SearchMode.Parameters && mode != SearchMode.CommandSequence)
                 {
                     if (mode == SearchMode.Text)
                     {
@@ -169,7 +169,7 @@ namespace latexparse_csharp
                         mode = SearchMode.CommandSequence;
                     }
                 }
-                else if (mode == SearchMode.BeginCommand || (FileData[i] == '\\' && mode != SearchMode.Parameters))
+                else if (mode == SearchMode.BeginCommand || (FileData[i] == '\\' && mode != SearchMode.Parameters && mode != SearchMode.CommandSequence) )
                 {
                     if (FileData[i] == '\\')
                     {

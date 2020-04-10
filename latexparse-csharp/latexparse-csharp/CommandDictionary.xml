@@ -8,7 +8,7 @@ Date:   29.03.2020
   <Command name="document">
     <GP name="content" body="True"/>
   </Command>
-
+  <Command name="maketitle"/>
   <Command name="usepackage">
     <GP name="package"/>
     <OP name="version"/>

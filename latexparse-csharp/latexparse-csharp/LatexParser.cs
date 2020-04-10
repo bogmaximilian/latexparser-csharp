@@ -17,7 +17,8 @@ namespace latexparse_csharp
         BeginCommand,
         CommandSequence,
         Parameters,
-        Text
+        Text,
+        CmdBegin
     }
 
     /// <summary>
@@ -124,8 +125,29 @@ namespace latexparse_csharp
 
             for (int i = counter; i < FileData.Length; i++)
             {
-
-                if (FileData[i] == endingchar)
+                //if (mode == SearchMode.CmdBegin)
+                //{
+                //    BeginCmd begincmd = new BeginCmd();
+                //    GParameter currparam = begincmd.Parameters.OfType<GParameter>()
+                //        .First(x => x.Parametertype == Parametertypes.Required && !x.ValueRecorded);
+                //    if (currparam.BeginCmdParam)
+                //    {
+                //        string cmd = ((TextCommand)currparam.SubCommands[0]).Content;
+                //        if (parentparam.CanHaveBody && parentparam.EndBodyList.Contains(cmd))
+                //        {
+                //            counter = startindex;
+                //            return;
+                //        }
+                //        else if (Commands.Exists(x => x.Name == cmd))
+                //        {
+                //            Command res = Commands.First(x => x.Name == cmd).DeepClone();
+                //            begincmd.LoadParams(res.DeepClone());
+                //            parentparam.SubCommands.Add(begincmd);
+                //            mode = SearchMode.Parameters;
+                //        }
+                //    }
+                //}
+                if (FileData[i] == endingchar && mode != SearchMode.Parameters)
                 {
                     if (mode == SearchMode.Text)
                     {
@@ -147,7 +169,7 @@ namespace latexparse_csharp
                         mode = SearchMode.CommandSequence;
                     }
                 }
-                else if (mode == SearchMode.BeginCommand || FileData[i] == '\\')
+                else if (mode == SearchMode.BeginCommand || (FileData[i] == '\\' && mode != SearchMode.Parameters))
                 {
                     if (FileData[i] == '\\')
                     {
@@ -182,10 +204,6 @@ namespace latexparse_csharp
                         {
                             res = Commands.First(x => x.Name == cmdname);
                         }
-                        else if (cmdname == "begin")
-                        {
-                            res = new BeginCmd();
-                        }
                         else if (cmdname == "end" && parentparam.IsBeginCmdBody)
                         {
                             //mode = SearchMode.Parameters;
@@ -194,13 +212,17 @@ namespace latexparse_csharp
 
                             int expectedlength = 2 + ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
                             string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),
-                                i, expectedlength).ToArray()).Replace("}", "").Replace("{","");
-                            if (checkstring == ((TextCommand) ((GParameter) parentparam.Parent.Parameters[0]).SubCommands[0])
+                                i, expectedlength).ToArray()).Replace("}", "").Replace("{", "");
+                            if (checkstring == ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0])
                                 .Content)
                             {
                                 counter = i + expectedlength;
                                 return;
                             }
+                        }
+                        else if (cmdname == "begin")
+                        {
+                            res = new BeginCmd();
                         }
 
                         //Verify if Command is loaded
@@ -250,27 +272,50 @@ namespace latexparse_csharp
                             curroparam.ValueRecorded = true;
                             break;
                         default:
-                            if (currcmd.Parameters.OfType<SCParameter>().Any(x => !x.ValueRecorded && x.Key == FileData[i]))
+                            if (FileData[i] != '\\')
                             {
-                                SCParameter param = currcmd.Parameters.OfType<SCParameter>().First(x => !x.ValueRecorded);
-                                param.ValueRecorded = true;
-                                param.Enabled = true;
-                            }
-                            else if (currcmd.Parameters.OfType<GParameter>().Any(x => !x.ValueRecorded && ((GParameter)x).Parametertype == Parametertypes.Required))
-                            {
-                                GParameter param = (GParameter)currcmd.Parameters.First(x =>
-                                    !x.ValueRecorded &&
-                                    ((GParameter)x).Parametertype == Parametertypes.Required);
-                                if (FileData[i] != ' ')
+                                //Check if the Character is a SCParameter
+                                if (currcmd.Parameters.OfType<SCParameter>().Any(x => !x.ValueRecorded && x.Key == FileData[i]))
                                 {
-                                    if (param.CanHaveBody)
+                                    SCParameter param = currcmd.Parameters.OfType<SCParameter>().First(x => !x.ValueRecorded);
+                                    param.ValueRecorded = true;
+                                    param.Enabled = true;
+                                }
+                                else if (currcmd.Parameters.OfType<GParameter>()
+                                    .Any(x => !x.ValueRecorded && ((GParameter)x).Parametertype == Parametertypes.Required))
+                                {
+                                    GParameter param = (GParameter)currcmd.Parameters.First(x =>
+                                        !x.ValueRecorded &&
+                                        ((GParameter)x).Parametertype == Parametertypes.Required);
+                                    if (FileData[i] != ' ')
                                     {
-                                        GetSubCommands(ref param, ref i);
-                                        param.ValueRecorded = true;
-                                        i--;
+                                        if (param.CanHaveBody)
+                                        {
+                                            GetSubCommands(ref param, ref i);
+                                            param.ValueRecorded = true;
+                                            i--;
+                                        }
+                                        else
+                                            param.SubCommands.Add(new TextCommand(FileData[i].ToString()));
                                     }
-                                    else
-                                        param.SubCommands.Add(new TextCommand(FileData[i].ToString()));
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    GParameter currgparam = currcmd.Parameters.OfType<GParameter>()
+                                        .First(x => x.Parametertype == Parametertypes.Required &&
+                                                    !x.ValueRecorded && x.CanHaveBody);
+                                    GetSubCommands(ref currgparam, ref i);
+                                    mode = SearchMode.BeginCommand;
+                                    currgparam.ValueRecorded = true;
+                                    i--;
+                                }
+                                catch (Exception)
+                                {
+                                    mode = SearchMode.BeginCommand;
+                                    i--;
                                 }
                             }
                             break;

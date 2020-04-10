@@ -5,11 +5,16 @@ Date:   29.03.2020
 -->
 
 <base>
-  <Command name="document"/>
+  <Command name="document">
+    <GP name="content" body="True"/>
+  </Command>
 
   <Command name="usepackage">
     <GP name="package"/>
     <OP name="version"/>
+  </Command>
+  <Command name="documentclass">
+    <GP name="docclass"/>
   </Command>
   <Command name="title">
     <GP name="title"/>

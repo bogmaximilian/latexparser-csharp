@@ -4,13 +4,13 @@ using System.Text;
 
 namespace latexparse_csharp
 {
-    public class MathCmd : CommandBase
+    public class MathRoot : CommandBase
     {
 
         public GParameter MathParam { get; set; }
 
 
-        public MathCmd()
+        public MathRoot()
         {
             MathParam = new GParameter("MathRoot", Parametertypes.Required);
         }

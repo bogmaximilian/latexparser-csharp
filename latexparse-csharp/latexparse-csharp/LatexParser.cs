@@ -198,9 +198,9 @@ namespace latexparse_csharp
                             //i = endindex;
                             #endregion
                             //Enable Math Mode and get Parameterized Content of the Command
-                            currcmd = new MathCmd();
+                            currcmd = new MathRoot();
                             parentparam.SubCommands.Add(currcmd);
-                            GParameter mathparam = ((MathCmd)currcmd).MathParam;
+                            GParameter mathparam = ((MathRoot)currcmd).MathParam;
                             i++;
                             GetSubCommands(ref mathparam, ref i, true);
                             break;
@@ -383,6 +383,12 @@ namespace latexparse_csharp
                         //Get string content and load it into a textcomment
                         string txtcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),
                             startindex, i - startindex).ToArray());
+                        txtcontent = (mathmode) ? txtcontent.Replace(" ", "") : txtcontent;
+
+                        if (mathmode)
+                        {
+                            currcmd = new MathTextCmd(txtcontent);
+                        }
 
                         //Add Command and adjust counter + mode accordingly
                         ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
@@ -405,8 +411,6 @@ namespace latexparse_csharp
 
             counter = FileData.Length;
         }
-
-
 
     }
 }

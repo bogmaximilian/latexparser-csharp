@@ -177,6 +177,18 @@ namespace latexparse_csharp
                         startindex = i;
                         mode = SearchMode.CommandSequence;
                     }
+                    else if (FileData[i] == '$')
+                    {
+                        //get the startindex and get the mathcontent it will be handled later
+                        startindex = i;
+                        int endindex = FileData.IndexOf('$', startindex + 1);
+                        string mathcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),
+                            startindex + 1, endindex - (startindex + 1)).ToArray());
+
+                        //Add the PreMathCmd to the Parentparameter
+                        parentparam.SubCommands.Add(new PreMathCmd(mathcontent));
+                        i = endindex;
+                    }
                     else
                     {
                         startindex = i;
@@ -206,7 +218,7 @@ namespace latexparse_csharp
                         }
                         else if (cmdname == "end" && parentparam.IsBeginCmdBody)
                         {
-
+                            //get the normal length end command would have and close the ongoing command if the end command matches
                             int expectedlength = 2 + ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
                             string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),
                                 i, expectedlength).ToArray()).Replace("}", "").Replace("{", "");
@@ -326,7 +338,7 @@ namespace latexparse_csharp
                 }
                 else if (mode == SearchMode.Text)
                 {
-                    if (FileData[i] == '\\')
+                    if (FileData[i] == '\\' || FileData[i] == '$')
                     {
                         //Get string content and load it into a textcomment
                         string txtcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),

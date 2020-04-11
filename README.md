@@ -1,6 +1,7 @@
 # Latexparser-chsarp
 Latexparser is a tool to read Latex files and convert them to c# objects. It ONLY contains few commands (specified in Command Dictionary).
 Latexparser is under development for the MCADTeX Project (Not yet public).
+Latexparser will not differentiate between document and non-document commands
 
 # How to Use Latexparser-csharp
 1. Download NuGet-Package via Nuget-Manager in Visual Studio. or directly from  [the website](https://www.nuget.org/packages/latexparse-csharp/)

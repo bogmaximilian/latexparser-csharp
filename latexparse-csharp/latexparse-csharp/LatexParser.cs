@@ -206,9 +206,6 @@ namespace latexparse_csharp
                         }
                         else if (cmdname == "end" && parentparam.IsBeginCmdBody)
                         {
-                            //mode = SearchMode.Parameters;
-                            //currcmd = Commands.First(x => x.Name == "end").DeepClone();
-                            //i--;
 
                             int expectedlength = 2 + ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
                             string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),

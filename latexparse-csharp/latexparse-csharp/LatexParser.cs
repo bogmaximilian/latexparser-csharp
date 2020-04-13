@@ -101,23 +101,22 @@ namespace latexparse_csharp
             return param.SubCommands;
         }
 
-        private static void GetSubCommands(ref GParameter parentparam, ref int counter, bool mathmode)
+        private static void GetSubCommands(ref GParameter parentparam, ref int counter, bool mathmode, char endingchar = ' ')
         {
-            char endingchar;
 
-            //Get Character that can end this Parameter
-            switch (parentparam.Parametertype)
+            if (endingchar == ' ')
             {
-                case Parametertypes.Required:
-                    if (mathmode)
-                        endingchar = '$';
-                    else
+                //Get Character that can end this Parameter
+                switch (parentparam.Parametertype)
+                {
+                    case Parametertypes.Required:
                         endingchar = (parentparam.CanHaveBody) ? '\\' : '}';
-                    break;
+                        break;
 
-                default:
-                    endingchar = ']';
-                    break;
+                    default:
+                        endingchar = ']';
+                        break;
+                }
             }
 
             //Set Search Mode
@@ -202,7 +201,16 @@ namespace latexparse_csharp
                             parentparam.SubCommands.Add(currcmd);
                             GParameter mathparam = ((MathRoot)currcmd).MathParam;
                             i++;
-                            GetSubCommands(ref mathparam, ref i, true);
+                            GetSubCommands(ref mathparam, ref i, true, '$');
+                            break;
+                        case '{':
+                            currcmd = new Command("Group");
+                            GParameter contentparam = new GParameter("Content", Parametertypes.Required);
+                            ((Command)currcmd).Parameters.Add(contentparam);
+                            i++;
+                            GetSubCommands(ref contentparam, ref i, mathmode, '}');
+                            contentparam.ValueRecorded = true;
+                            parentparam.SubCommands.Add(currcmd);
                             break;
                         default:
                             if (mathmode)
@@ -300,19 +308,24 @@ namespace latexparse_csharp
                             //Get the according Parameter 
                             GParameter currparam = ((Command)currcmd).Parameters.OfType<GParameter>()
                                 .First(x => x.Parametertype == Parametertypes.Required && !x.ValueRecorded);
-                            i++;
-                            GetSubCommands(ref currparam, ref i, mathmode);
-                            currparam.ValueRecorded = true;
-                            if (currparam.BeginCmdParam)
+                            if (!currparam.CanHaveBody)
                             {
-                                string cmd = ((TextCommand)currparam.SubCommands[0]).Content;
-                                if (Commands.Exists(x => x.Name == cmd))
+                                i++;
+                                GetSubCommands(ref currparam, ref i, mathmode);
+                                currparam.ValueRecorded = true;
+                                if (currparam.BeginCmdParam)
                                 {
-                                    Command res = Commands.First(x => x.Name == cmd).DeepClone();
-                                    ((BeginCmd)currcmd).LoadParams(res.DeepClone());
+                                    string cmd = ((TextCommand)currparam.SubCommands[0]).Content;
+                                    if (Commands.Exists(x => x.Name == cmd))
+                                    {
+                                        Command res = Commands.First(x => x.Name == cmd).DeepClone();
+                                        ((BeginCmd)currcmd).LoadParams(res.DeepClone());
+                                    }
                                 }
+                                break;
                             }
-                            break;
+                            goto default;
+
                         case '[':
                             GParameter curroparam = ((Command)currcmd).Parameters.OfType<GParameter>()
                                 .FirstOrDefault(x => x.Parametertype == Parametertypes.Optional && !x.ValueRecorded);
@@ -320,6 +333,7 @@ namespace latexparse_csharp
                             GetSubCommands(ref curroparam, ref i, mathmode);
                             curroparam.ValueRecorded = true;
                             break;
+                        
                         default:
                             if (FileData[i] != endingchar)
                             {
@@ -330,8 +344,7 @@ namespace latexparse_csharp
                                     param.ValueRecorded = true;
                                     param.Enabled = true;
                                 }
-                                else if (((Command)currcmd).Parameters.OfType<GParameter>()
-                                    .Any(x => !x.ValueRecorded && ((GParameter)x).Parametertype == Parametertypes.Required))
+                                else if (((Command)currcmd).Parameters.OfType<GParameter>().Any(x => !x.ValueRecorded && ((GParameter)x).Parametertype == Parametertypes.Required))
                                 {
                                     GParameter param = (GParameter)((Command)currcmd).Parameters.First(x =>
                                         !x.ValueRecorded &&
@@ -368,6 +381,7 @@ namespace latexparse_csharp
                                 }
                             }
                             break;
+                        
                     }
 
                     //if (currcmd.Parameters.All(x => x.ValueRecorded))
@@ -378,7 +392,7 @@ namespace latexparse_csharp
                 }
                 else if (mode == SearchMode.Text)
                 {
-                    if (FileData[i] == '\\' || FileData[i] == '$' || FileData[i] == '^'  || FileData[i] == '_')
+                    if (FileData[i] == '\\' || FileData[i] == '{' || FileData[i] == '$' || (mathmode && (FileData[i] == '^' || FileData[i] == '_')))
                     {
                         //Get string content and load it into a textcomment
                         string txtcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),
@@ -387,11 +401,14 @@ namespace latexparse_csharp
 
                         if (mathmode)
                         {
-                            currcmd = new MathTextCmd(txtcontent);
+                            currcmd = new MathGroup(txtcontent);
+                            ((GParameter)parentparam).SubCommands.Add(currcmd);
                         }
-
-                        //Add Command and adjust counter + mode accordingly
-                        ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
+                        else
+                        {
+                            //Add Command and adjust counter + mode accordingly
+                            ((GParameter)parentparam).SubCommands.Add(new TextCommand(txtcontent));
+                        }
                         i--;
                         mode = SearchMode.BeginCommand;
                     }

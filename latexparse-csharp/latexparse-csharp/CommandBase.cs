@@ -10,6 +10,7 @@ namespace latexparse_csharp
     [Serializable]
     public class CommandBase
     {
+
         /// <summary>
         /// Convert the String into a tree-like structured string
         /// </summary>

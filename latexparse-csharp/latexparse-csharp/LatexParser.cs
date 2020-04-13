@@ -204,10 +204,9 @@ namespace latexparse_csharp
                             GetSubCommands(ref mathparam, ref i, true, '$');
                             break;
                         case '{':
-                            currcmd = new Command("Group");
-                            GParameter contentparam = new GParameter("Content", Parametertypes.Required);
-                            ((Command)currcmd).Parameters.Add(contentparam);
+                            currcmd = new MathGroup();
                             i++;
+                            GParameter contentparam = ((MathGroup) currcmd).Contentparameter;
                             GetSubCommands(ref contentparam, ref i, mathmode, '}');
                             contentparam.ValueRecorded = true;
                             parentparam.SubCommands.Add(currcmd);
@@ -267,13 +266,13 @@ namespace latexparse_csharp
                         else if (cmdname == "end" && parentparam.IsBeginCmdBody)
                         {
                             //get the normal length end command would have and close the ongoing command if the end command matches
-                            int expectedlength = 2 + ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
+                            int expectedlength = ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
                             string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),
-                                i, expectedlength).ToArray()).Replace("}", "").Replace("{", "");
+                                i+1, expectedlength).ToArray());
                             if (checkstring == ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0])
                                 .Content)
                             {
-                                counter = i + expectedlength;
+                                counter = i + expectedlength + 2;
                                 return;
                             }
                         }
@@ -401,7 +400,8 @@ namespace latexparse_csharp
 
                         if (mathmode)
                         {
-                            currcmd = new MathGroup(txtcontent);
+                            currcmd = new MathGroup();
+                            ((MathGroup)currcmd).Contentparameter.SubCommands.Add(new TextCommand(txtcontent));
                             ((GParameter)parentparam).SubCommands.Add(currcmd);
                         }
                         else

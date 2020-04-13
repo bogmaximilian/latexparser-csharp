@@ -4,7 +4,7 @@ using System.Text;
 
 namespace latexparse_csharp
 {
-    public class MathGroup : TextCommand, IMathGroup
+    public class MathGroup : CommandBase, IMathGroup
     {
         public List<IMathGroup> RelativeCommands
         {
@@ -12,14 +12,23 @@ namespace latexparse_csharp
             set;
         }
 
-        public MathGroup(string content) : base(content)
-        {
+        public GParameter Contentparameter { get; set; }
 
+        public MathGroup()
+        {
+            Contentparameter = new GParameter("Group", Parametertypes.Required);
         }
 
         public override string ToString(int depth)
         {
-            return "Mathgroup: " + $"\n{base.ToString(depth + 1)}";
+            string indent = String.Empty;
+            for (int i = 0; i < depth; i++)
+            {
+                indent += "-";
+            }
+
+            return $"{indent}Mathgroup: " + 
+                   $"\n{Contentparameter.ToString(depth + 1)}";
         }
     }
 }

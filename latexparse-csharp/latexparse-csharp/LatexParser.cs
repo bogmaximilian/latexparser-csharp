@@ -125,6 +125,7 @@ namespace latexparse_csharp
             //Setup Variables for recording commands
             int startindex = counter;
             CommandBase currcmd = null;
+            CommandBase relmathcmd = null;
 
             for (int i = counter; i < FileData.Length; i++)
             {
@@ -204,12 +205,12 @@ namespace latexparse_csharp
                             GetSubCommands(ref mathparam, ref i, true, '$');
                             break;
                         case '{':
-                            currcmd = new MathGroup();
+                            relmathcmd = new MathGroup();
                             i++;
-                            GParameter contentparam = ((MathGroup) currcmd).Contentparameter;
+                            GParameter contentparam = ((MathGroup) relmathcmd).Contentparameter;
                             GetSubCommands(ref contentparam, ref i, mathmode, '}');
                             contentparam.ValueRecorded = true;
-                            parentparam.SubCommands.Add(currcmd);
+                            parentparam.SubCommands.Add(relmathcmd);
                             break;
                         default:
                             if (mathmode)
@@ -220,13 +221,13 @@ namespace latexparse_csharp
                                         mode = SearchMode.Parameters;
                                         currcmd = new Command("NamingCmd");
                                         ((Command)currcmd).Parameters.Add(new GParameter("Content", Parametertypes.Required));
-                                        parentparam.SubCommands.Add(currcmd);
+                                        ((IMathGroup)relmathcmd).RelativeCommands.Add(currcmd);
                                         break;
                                     case '^':
                                         mode = SearchMode.Parameters;
                                         currcmd = new Command("PowerCmd");
                                         ((Command)currcmd).Parameters.Add(new GParameter("Content", Parametertypes.Required));
-                                        parentparam.SubCommands.Add(currcmd);
+                                        ((IMathGroup)relmathcmd).RelativeCommands.Add(currcmd);
                                         break;
                                     default:
                                         startindex = i;
@@ -400,9 +401,9 @@ namespace latexparse_csharp
 
                         if (mathmode)
                         {
-                            currcmd = new MathGroup();
-                            ((MathGroup)currcmd).Contentparameter.SubCommands.Add(new TextCommand(txtcontent));
-                            ((GParameter)parentparam).SubCommands.Add(currcmd);
+                            relmathcmd = new MathGroup();
+                            ((MathGroup)relmathcmd).Contentparameter.SubCommands.Add(new TextCommand(txtcontent));
+                            ((GParameter)parentparam).SubCommands.Add(relmathcmd);
                         }
                         else
                         {

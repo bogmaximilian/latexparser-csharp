@@ -4,6 +4,6 @@ namespace latexparse_csharp
 {
     public interface IMathGroup
     {
-        List<IMathGroup> RelativeCommands { get; set; }
+        List<CommandBase> RelativeCommands { get; set; }
     }
 }

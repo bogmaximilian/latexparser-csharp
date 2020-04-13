@@ -6,11 +6,7 @@ namespace latexparse_csharp
 {
     public class MathGroup : CommandBase, IMathGroup
     {
-        public List<IMathGroup> RelativeCommands
-        {
-            get;
-            set;
-        }
+        public List<CommandBase> RelativeCommands { get; set; } = new List<CommandBase>();
 
         public GParameter Contentparameter { get; set; }
 
@@ -27,8 +23,15 @@ namespace latexparse_csharp
                 indent += "-";
             }
 
-            return $"{indent}Mathgroup: " + 
-                   $"\n{Contentparameter.ToString(depth + 1)}";
+            string cmdstr = "";
+            foreach (CommandBase cmd in RelativeCommands)
+            {
+                cmdstr += cmd.ToString(depth + 2);
+            }
+
+            return $"{indent}Mathgroup: " +
+                   $"\n{Contentparameter.ToString(depth + 1)}" +
+                   $"{indent + "-"}RelCmds: {cmdstr}";
         }
     }
 }

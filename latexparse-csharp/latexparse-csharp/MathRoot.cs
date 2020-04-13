@@ -29,7 +29,7 @@ namespace latexparse_csharp
                 cmdstr += cmd.ToString(depth + 1);
             }
             //UNDONE
-            return $"\n{indent}MathCmd: \n" +
+            return $"\n{indent}MathRoot: \n" +
                    $"{cmdstr}\n";
         }
 

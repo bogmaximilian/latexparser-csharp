@@ -203,6 +203,7 @@ namespace latexparse_csharp
                             GParameter mathparam = ((MathRoot)currcmd).MathParam;
                             i++;
                             GetSubCommands(ref mathparam, ref i, true, '$');
+                            mathparam.ValueRecorded = true;
                             break;
                         case '{':
                             relmathcmd = new MathGroup();
@@ -210,6 +211,22 @@ namespace latexparse_csharp
                             GParameter contentparam = ((MathGroup) relmathcmd).Contentparameter;
                             GetSubCommands(ref contentparam, ref i, mathmode, '}');
                             contentparam.ValueRecorded = true;
+                            parentparam.SubCommands.Add(relmathcmd);
+                            break;
+                        case '(':
+                            relmathcmd = new MathParanthesisGroup('(');
+                            i++;
+                            GParameter contentparameter = ((MathParanthesisGroup) relmathcmd).GroupParameter;
+                            GetSubCommands(ref contentparameter, ref i, mathmode, ((MathParanthesisGroup)relmathcmd).Endingchar);
+                            contentparameter.ValueRecorded = true;
+                            parentparam.SubCommands.Add(relmathcmd);
+                            break;
+                        case '[':
+                            relmathcmd = new MathParanthesisGroup('[');
+                            i++;
+                            GParameter groupcontentparameter = ((MathParanthesisGroup) relmathcmd).GroupParameter;
+                            GetSubCommands(ref groupcontentparameter, ref i, mathmode, ((MathParanthesisGroup)relmathcmd).Endingchar);
+                            groupcontentparameter.ValueRecorded = true;
                             parentparam.SubCommands.Add(relmathcmd);
                             break;
                         default:
@@ -392,7 +409,8 @@ namespace latexparse_csharp
                 }
                 else if (mode == SearchMode.Text)
                 {
-                    if (FileData[i] == '\\' || FileData[i] == '{' || FileData[i] == '$' || (mathmode && (FileData[i] == '^' || FileData[i] == '_')))
+                    if (FileData[i] == '\\' || FileData[i] == '{' || FileData[i] == '$' 
+                        || (mathmode && (FileData[i] == '^' || FileData[i] == '_' || FileData[i] == '(' || FileData[i] == '[')))
                     {
                         //Get string content and load it into a textcomment
                         string txtcontent = new string(new ArraySegment<char>(FileData.ToCharArray(),

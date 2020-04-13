@@ -4,6 +4,7 @@ using System.Text;
 
 namespace latexparse_csharp
 {
+    [Serializable]
     public class MathCmd : Command, IMathGroup
     {
         public List<CommandBase> RelativeCommands { get; set; } = new List<CommandBase>();

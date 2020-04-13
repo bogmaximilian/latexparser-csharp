@@ -4,6 +4,7 @@ using System.Text;
 
 namespace latexparse_csharp
 {
+    [Serializable]
     public class MathRoot : CommandBase
     {
 

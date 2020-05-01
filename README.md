@@ -1,3 +1,6 @@
+# IMPORTANT
+This Package is still being developed and as of now doesn't support custom packages nor does it support the entirety of latex syntax
+
 # Latexparser-chsarp
 Latexparser is a tool to read Latex files and convert them to c# objects. It ONLY contains few commands (specified in Command Dictionary).
 Latexparser is under development for the MCADTeX Project (Not yet public).

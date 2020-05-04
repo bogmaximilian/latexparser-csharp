@@ -59,35 +59,5 @@ namespace latexparse_csharp.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;!--
-        ///Author: Maximilian Bogner
-        ///Date:   29.03.2020
-        ///--&gt;
-        ///
-        ///&lt;base&gt;
-        ///  &lt;Command Name=&quot;title&quot;&gt;
-        ///    &lt;GP Name=&quot;title&quot;/&gt;
-        ///  &lt;/Command&gt;
-        ///  &lt;Command Name=&quot;author&quot;&gt;
-        ///    &lt;GP Name=&quot;author&quot;/&gt;
-        ///  &lt;/Command&gt;
-        ///  &lt;Command Name=&quot;maketitle&quot;/&gt;
-        ///  &lt;Command Name=&quot;date&quot;&gt;
-        ///    &lt;GP Name=&quot;date&quot;/&gt;
-        ///  &lt;/Command&gt;
-        ///  &lt;!--Begin is special as it its required parameters chang based on the first parameter. Custom Implementation in code--&gt;
-        ///
-        ///  &lt;Command Name=&quot;section&quot;&gt;
-        ///    &lt;GP Name=&quot;title&quot;/&gt;
-        ///    [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string CommandDictionary {
-            get {
-                return ResourceManager.GetString("CommandDictionary", resourceCulture);
-            }
-        }
     }
 }

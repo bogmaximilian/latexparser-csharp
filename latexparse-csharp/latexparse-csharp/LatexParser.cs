@@ -56,7 +56,7 @@ namespace latexparse_csharp
         /// </summary>
         /// <param name="filepath"></param>
         /// <returns></returns>
-        public static List<CommandBase> ParseFile(string filepath)
+        public static List<CommandBase> ParseFile(string filepath, XmlDocument doc)
         {
             //Get File Data
             FileData = File.ReadAllText(filepath, Encoding.UTF8).Replace("\r", "").Replace("\n", "");
@@ -64,35 +64,25 @@ namespace latexparse_csharp
             //Create Command Dictionary
             Commands = new List<Command>();
 
+            //Get all used packages to load Commands into Dictionary
+            Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
 
-            using (XmlReader reader = XmlReader.Create(new StringReader(Properties.Resources.CommandDictionary),
-                new XmlReaderSettings() { IgnoreComments = true }))
+            //Iterate through Regex Matches
+            foreach (Match match in regex.Matches(FileData))
             {
-
-                //Read XMl Command Dictionary
-                XmlDocument doc = new XmlDocument();
-                doc.Load(reader);
-
-
-                //Get all used packages to load Commands into Dictionary
-                Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
-
-                //Iterate through Regex Matches
-                foreach (Match match in regex.Matches(FileData))
+                for (int i = 0; i < doc.ChildNodes.Count; i++)
                 {
-                    for (int i = 0; i < doc.ChildNodes.Count; i++)
+                    if (doc.ChildNodes[i].Name == match.Groups[3].Value || doc.ChildNodes[i].Name == "base")
                     {
-                        if (doc.ChildNodes[i].Name == match.Groups[3].Value || doc.ChildNodes[i].Name == "base")
+                        foreach (XmlNode cmdnode in doc.ChildNodes[i])
                         {
-                            foreach (XmlNode cmdnode in doc.ChildNodes[i])
-                            {
-                                Commands.Add(Command.Parse(cmdnode));
-                            }
+                            Commands.Add(Command.Parse(cmdnode));
                         }
-
                     }
+
                 }
             }
+
 
             //Setup normal parameters to get the Subcommands
             GParameter param = new GParameter("test", Parametertypes.Required, true, new List<string>());
@@ -208,7 +198,7 @@ namespace latexparse_csharp
                         case '{':
                             relmathcmd = new MathGroup();
                             i++;
-                            GParameter contentparam = ((MathGroup) relmathcmd).Contentparameter;
+                            GParameter contentparam = ((MathGroup)relmathcmd).Contentparameter;
                             GetSubCommands(ref contentparam, ref i, mathmode, '}');
                             contentparam.ValueRecorded = true;
                             parentparam.SubCommands.Add(relmathcmd);
@@ -216,7 +206,7 @@ namespace latexparse_csharp
                         case '(':
                             relmathcmd = new MathParanthesisGroup('(');
                             i++;
-                            GParameter contentparameter = ((MathParanthesisGroup) relmathcmd).GroupParameter;
+                            GParameter contentparameter = ((MathParanthesisGroup)relmathcmd).GroupParameter;
                             GetSubCommands(ref contentparameter, ref i, mathmode, ((MathParanthesisGroup)relmathcmd).Endingchar);
                             contentparameter.ValueRecorded = true;
                             parentparam.SubCommands.Add(relmathcmd);
@@ -224,7 +214,7 @@ namespace latexparse_csharp
                         case '[':
                             relmathcmd = new MathParanthesisGroup('[');
                             i++;
-                            GParameter groupcontentparameter = ((MathParanthesisGroup) relmathcmd).GroupParameter;
+                            GParameter groupcontentparameter = ((MathParanthesisGroup)relmathcmd).GroupParameter;
                             GetSubCommands(ref groupcontentparameter, ref i, mathmode, ((MathParanthesisGroup)relmathcmd).Endingchar);
                             groupcontentparameter.ValueRecorded = true;
                             parentparam.SubCommands.Add(relmathcmd);
@@ -286,7 +276,7 @@ namespace latexparse_csharp
                             //get the normal length end command would have and close the ongoing command if the end command matches
                             int expectedlength = ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0]).Content.Length;
                             string checkstring = new string(new ArraySegment<char>(FileData.ToCharArray(),
-                                i+1, expectedlength).ToArray());
+                                i + 1, expectedlength).ToArray());
                             if (checkstring == ((TextCommand)((GParameter)parentparam.Parent.Parameters[0]).SubCommands[0])
                                 .Content)
                             {
@@ -350,7 +340,7 @@ namespace latexparse_csharp
                             GetSubCommands(ref curroparam, ref i, mathmode);
                             curroparam.ValueRecorded = true;
                             break;
-                        
+
                         default:
                             if (FileData[i] != endingchar)
                             {
@@ -398,7 +388,7 @@ namespace latexparse_csharp
                                 }
                             }
                             break;
-                        
+
                     }
 
                     //if (currcmd.Parameters.All(x => x.ValueRecorded))
@@ -409,7 +399,7 @@ namespace latexparse_csharp
                 }
                 else if (mode == SearchMode.Text)
                 {
-                    if (FileData[i] == '\\' || FileData[i] == '{' || FileData[i] == '$' 
+                    if (FileData[i] == '\\' || FileData[i] == '{' || FileData[i] == '$'
                         || (mathmode && (FileData[i] == '^' || FileData[i] == '_' || FileData[i] == '(' || FileData[i] == '[')))
                     {
                         //Get string content and load it into a textcomment

@@ -51,6 +51,26 @@ namespace latexparse_csharp
 
         private static List<Command> Commands { get; set; }
 
+        public static List<string> GetRequiredPackages(string filepath)
+        {
+            //Read File
+            string data = File.ReadAllText(filepath).Replace("\r", "").Replace("\n", "");
+
+            //Get Required Package Refernces
+            Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
+
+            List<string> packagenames = new List<string>();
+
+
+            //Record all packagenames
+            foreach (Match match in regex.Matches(data))
+            {
+                packagenames.Add(match.Groups[3].Value);
+            }
+
+            return packagenames;
+        }
+
         /// <summary>
         /// Parse Latex File to C# Class Structure. For further Information see the Docs.
         /// </summary>
@@ -64,25 +84,14 @@ namespace latexparse_csharp
             //Create Command Dictionary
             Commands = new List<Command>();
 
-            //Get all used packages to load Commands into Dictionary
-            Regex regex = new Regex(@"\\usepackage(\[(.*?)\])?\{(.*?)\}");
-
-            //Iterate through Regex Matches
-            foreach (Match match in regex.Matches(FileData))
+            //Get All Commands from XmlDocument
+            for (int i = 0; i < doc.ChildNodes.Count; i++)
             {
-                for (int i = 0; i < doc.ChildNodes.Count; i++)
+                foreach (XmlNode cmdnode in doc.ChildNodes[i])
                 {
-                    if (doc.ChildNodes[i].Name == match.Groups[3].Value || doc.ChildNodes[i].Name == "base")
-                    {
-                        foreach (XmlNode cmdnode in doc.ChildNodes[i])
-                        {
-                            Commands.Add(Command.Parse(cmdnode));
-                        }
-                    }
-
+                    Commands.Add(Command.Parse(cmdnode));
                 }
             }
-
 
             //Setup normal parameters to get the Subcommands
             GParameter param = new GParameter("test", Parametertypes.Required, true, new List<string>());

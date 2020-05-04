@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>latexparse-csharp</id>
+    <version>1.0.3</version>
+    <authors>latexparse-csharp</authors>
+    <owners>latexparse-csharp</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">LICENSE</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="D:\Github\latexparser-csharp\latexparse-csharp\latexparse-csharp\bin\Debug\netstandard2.0\latexparse-csharp.dll" target="lib\netstandard2.0\latexparse-csharp.dll" />
+    <file src="D:\Github\latexparser-csharp\LICENSE" target="LICENSE" />
+  </files>
+</package>

@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vMx+SzUGR3IrbJnGw7LzFbpDNNEi8SWMrGmsEPQRfZ4y3MeXUnQ6CjCZIPa66NVd+sxfzkCsX2h3Fxr3Z8p+Ew==",
+  "dgSpecHash": "R6dV9Y+ECxaqgZWIZAlMridbX0D8walSqt7TbfS1T3WxmWUHD2lBSU1n39oVlu77OwTH3lmruP44m3xA4adMZw==",
   "success": true,
   "projectFilePath": "D:\\Github\\latexparser-csharp\\latexparse-csharp\\Testing\\Testing.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\maxbo\\.nuget\\packages\\latexparse-csharp\\1.0.2\\latexparse-csharp.1.0.2.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }

@@ -19,15 +19,17 @@ CommandDictionary.xml is a file where all recognized commands are being stored t
 
 CommandDictionary.xml Syntax:
 ```xml
-<package>
-    <Command name="commandname">
-        <GP name="RequiredGroupParameter" body="False">
-            <CmdEnd cmdcall="EndCommand">
-        </GP>
-        <OP name="OptionalGroupParameter"/>
-        <SCP name="SingleCharacterParameter" Key="*"/>
-    </Command>
-</package>
+<root>
+    <package>
+        <Command name="commandname">
+            <GP name="RequiredGroupParameter" body="False">
+                <CmdEnd cmdcall="EndCommand">
+            </GP>
+            <OP name="OptionalGroupParameter"/>
+            <SCP name="SingleCharacterParameter" Key="*"/>
+        </Command>
+    </package>
+</root>
 ```
 - package -> The package these commands belong to. For Example graphicx functionality will be in the graphicx package
 - Command -> name specifies the name of the Command. Commands can have various types of parameters

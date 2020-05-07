@@ -24,7 +24,6 @@ namespace latexparse_csharp
         /// </summary>
         public static Command Parse(XmlNode node)
         {
-
             //Get cmd name from xml Node
             Command cmd = new Command(node.Attributes["name"].Value);
             //Check if the Command is a MathCmd
@@ -33,9 +32,6 @@ namespace latexparse_csharp
             {
                 cmd = new MathCmd(node.Attributes["name"].Value);
             }
-
-
-
 
             //Get subnode Name and depending on it setup Command Parameters 
             foreach (XmlNode subnode in node.ChildNodes)
